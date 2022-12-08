@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Team Tailor Insights</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+        <style>
+            .grid {
+                display: grid;
+                grid-template-columns: 100px 150px 250px 1fr 100px;
+                border-top: 1px solid #bbb;
+                border-right: 1px solid #bbb;
+                font-family: 'Roboto', serif;
+            }
+
+            .grid > span:nth-child(10n+6),
+            .grid > span:nth-child(10n+7),
+            .grid > span:nth-child(10n+8),
+            .grid > span:nth-child(10n+9),
+            .grid > span:nth-child(10n+10) {
+                background-color: #eee;
+            }
+            
+            .grid > span {
+                padding: 8px 4px;
+                border-left: 1px solid #bbb;
+                border-bottom: 1px solid #bbb;
+            }
+            .grid > .header {
+                font-size: large;
+                background-color: lightblue;
+            }
+        </style>
+        <script>
+            function gotoUser(user) {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (user === null)
+                    urlParams.delete('user')
+                else
+                    urlParams.set('user', user);
+                window.location = "/?" + urlParams.toString(); 
+            }
+
+            function onMonthChanged() {
+                let months = document.getElementById("monthSelect");
+                const urlParams = new URLSearchParams(window.location.search);
+                urlParams.set('months', months.value);
+                window.location = "/?" + urlParams.toString(); 
+            }
+        </script>
+    </head>
+    <body>
+        <div class="grid">
+            <span class="header"><strong>Skapad</strong>
+                <select id="monthSelect" onchange="onMonthChanged()">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
+            </span>
+            <span class="header"><strong><a onClick='gotoUser(null)' href="#">Användare</a></strong></span>
+            <span class="header"><strong>Kandidat</strong></span>
+            <!--span class="header"><strong>Email</strong></span-->
+            <span class="header"><strong>Anteckning</strong></span>
+            <span class="header"><strong>Länk</strong></span>
+            {% for d in data %}
+                <span>{{ d['CreatedAt'] }}</span>
+                <span><a onclick='gotoUser("{{ d["User"] }}")' href="#">{{ d['User'] }}</a></span>
+                <span>{{ d['Name'] }}</span>
+                <!--span>{{ d['Email'] }}</span-->
+                <span>{{ d['Note'] }}</span>
+                <span><a href="{{ d['Link'] }}">Link</a></span>
+            {% endfor %}
+        </div>
+    </body>
+    <script>
+        // Load the selected months
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('months')) {
+            let months = document.getElementById("monthSelect");
+            months.value = urlParams.get('months');
+        }
+    </script>
+</html>
