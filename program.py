@@ -5,12 +5,25 @@ import datetime
 import requests
 import sqlite3
 from flask import Flask, request, render_template
+from flask_httpauth import HTTPBasicAuth
+from werkzeug.security import generate_password_hash, check_password_hash
 from dateutil.relativedelta import relativedelta
 
-
 app = Flask(__name__)
+auth = HTTPBasicAuth()
+
+users = {
+    os.environ.get("USER"): generate_password_hash(os.environ.get("PASSWORD"))
+}
+
+@auth.verify_password
+def verify_password(username, password):
+    if username in users and \
+            check_password_hash(users.get(username), password):
+        return username
 
 @app.route("/", methods=["GET"])
+@auth.login_required
 def get_index():
     data = get_data()
     return render_template('index.html', data=data)
@@ -53,11 +66,8 @@ def get_data():
 
     return data
 
-@app.route("/data", methods=['GET'])
-def get_notes():
-    return get_data()
-
 @app.route("/reload", methods=["POST"])
+@auth.login_required
 def reload_data():
     # Set API headers
     headers = {
