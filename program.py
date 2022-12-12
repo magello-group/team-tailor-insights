@@ -9,9 +9,21 @@ from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
 from dateutil.relativedelta import relativedelta
 
-app = Flask(__name__)
-auth = HTTPBasicAuth()
+# Pre-flight checks
+if not os.environ.get("USER"):
+    print("Missing USER env var")
+    exit()
+if not os.environ.get("PASSWORD"):
+    print("Missing PASSWORD env var")
+    exit()
+if not os.environ.get("API_TOKEN"):
+    print("Missing API_TOKEN env var")
+    exit()
 
+app = Flask(__name__)
+
+# Set up basic auth
+auth = HTTPBasicAuth()
 users = {
     os.environ.get("USER"): generate_password_hash(os.environ.get("PASSWORD"))
 }
@@ -40,6 +52,9 @@ def get_data():
     connection = sqlite3.connect("teamtailor.db")
     cursor = connection.cursor()
 
+    # Setup tables (if non-existant)
+    create_tables(cursor)
+
     # Query data
     data = [
         {
@@ -66,7 +81,7 @@ def get_data():
 
     return data
 
-@app.route("/reload", methods=["POST"])
+@app.route("/reload", methods=["GET"])
 @auth.login_required
 def reload_data():
     # Set API headers
