@@ -14,8 +14,8 @@
 ## Build & run as container
 
 ```bash
-podman build -t insights . &&  \
-podman run -it \
+docker build -t insights . &&  \
+docker run -it \
     -e API_TOKEN=[token] \
     -e USER=[user] \
     -e PASSWORD=[password] \
