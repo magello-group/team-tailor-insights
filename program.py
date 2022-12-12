@@ -105,7 +105,8 @@ def reload_data():
     page_size = requests.utils.quote('page[size]=30')
     users = requests.get(
         f'https://api.teamtailor.com/v1/users?{page_size}',
-        headers=headers
+        headers=headers,
+        hooks={'response': request_hook}
     )
     users.raise_for_status()
     users_json = users.json()
@@ -124,14 +125,16 @@ def reload_data():
         connection.commit()
         users = requests.get(
             users_json['links']['next'],
-            headers=headers
+            headers=headers,
+            hooks={'response': request_hook}
         )
         users_json = users.json()
 
     # Notes
     notes = requests.get(
         'https://api.teamtailor.com/v1/notes',
-        headers=headers
+        headers=headers,
+        hooks={'response': request_hook}
     )  
 
     data = [
@@ -151,7 +154,8 @@ def reload_data():
     # Candidates
     candidates = requests.get(
         f'https://api.teamtailor.com/v1/candidates?{page_size}',
-        headers=headers
+        headers=headers,
+        hooks={'response': request_hook}
     )
 
     # We need to do a pagination loop, because of a bug in team tailors api
@@ -174,7 +178,8 @@ def reload_data():
         connection.commit()
         candidates = requests.get(
             candidates_json['links']['next'],
-            headers=headers
+            headers=headers,
+            hooks={'response': request_hook}
         )
         candidates_json = candidates.json()
 
@@ -182,6 +187,8 @@ def reload_data():
 
     return "OK", 200
 
+def request_hook(r, *args, **kwargs):
+    print(f'Calling API at {r.url}')
 
 def create_tables(cursor):
     cursor.execute("""
