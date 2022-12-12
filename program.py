@@ -102,8 +102,9 @@ def reload_data():
     cursor.execute("DELETE FROM Candidates")
 
     # Users
+    page_size = requests.utils.quote('page[size]=30')
     users = requests.get(
-        'https://api.teamtailor.com/v1/users',
+        f'https://api.teamtailor.com/v1/users?{page_size}',
         headers=headers
     )
     users.raise_for_status()
@@ -149,7 +150,7 @@ def reload_data():
 
     # Candidates
     candidates = requests.get(
-        'https://api.teamtailor.com/v1/candidates',
+        f'https://api.teamtailor.com/v1/candidates?{page_size}',
         headers=headers
     )
 
