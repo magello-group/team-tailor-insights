@@ -11,7 +11,7 @@ COPY run.sh run.sh
 COPY program.py program.py
 COPY templates/* templates/
 
-EXPOSE 5000
+EXPOSE 3000
 
 ENTRYPOINT [ "./run.sh" ]
 

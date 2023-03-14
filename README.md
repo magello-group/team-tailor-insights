@@ -2,8 +2,8 @@
 
 * Install dependencies via `poetry install`
 * Run via `[Environment variables - see below] ./run.sh`
-* To reload data go to `http://localhost:5000/reload`. For login/password see environment variables below.
-* To view insights web app browse to `http://localhost:5000`
+* To reload data go to `http://localhost:3000/reload`. For login/password see environment variables below.
+* To view insights web app browse to `http://localhost:3000`
 
 ## Environment variables
 
@@ -19,6 +19,6 @@ docker run -it \
     -e API_TOKEN=[token] \
     -e USER=[user] \
     -e PASSWORD=[password] \
-    -p 5000:5000 \
+    -p 3000:3000 \
     insights
 ```
