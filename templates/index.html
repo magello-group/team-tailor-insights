@@ -2,33 +2,26 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Team Tailor Insights</title>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+        <title>TeamTailor Insights</title>
         <style>
-            .grid {
-                display: grid;
-                grid-template-columns: 100px 150px 250px 1fr 100px;
-                border-top: 1px solid #bbb;
-                border-right: 1px solid #bbb;
-                font-family: 'Roboto', serif;
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            table {
+                margin: 0;
             }
 
-            .grid > span:nth-child(10n+6),
-            .grid > span:nth-child(10n+7),
-            .grid > span:nth-child(10n+8),
-            .grid > span:nth-child(10n+9),
-            .grid > span:nth-child(10n+10) {
-                background-color: #eee;
+            th {
+                background-color: #E32185;
+                color: #fff;
+                font-weight: bold;
             }
-            
-            .grid > span {
-                padding: 8px 4px;
-                border-left: 1px solid #bbb;
-                border-bottom: 1px solid #bbb;
+            tr {
+                border-bottom: 1rem;
+                border-color: #000;
             }
-            .grid > .header {
-                font-size: large;
-                background-color: lightblue;
+            tr:nth-of-type(odd)  {
+                background-color: #f1f1f1;
             }
         </style>
         <script>
@@ -50,32 +43,38 @@
         </script>
     </head>
     <body>
-        <div class="grid">
-            <span class="header"><strong>Skapad</strong>
-                <select id="monthSelect" onchange="onMonthChanged()">
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                </select>
-            </span>
-            <span class="header"><strong><a onClick='gotoUser(null)' href="#">Användare</a></strong></span>
-            <span class="header"><strong>Kandidat</strong></span>
-            <!--span class="header"><strong>Email</strong></span-->
-            <span class="header"><strong>Anteckning</strong></span>
-            <span class="header"><strong>Länk</strong></span>
-            {% for d in data %}
-                <span>{{ d['CreatedAt'] }}</span>
-                <span><a onclick='gotoUser("{{ d["User"] }}")' href="#">{{ d['User'] }}</a></span>
-                <span>{{ d['Name'] }}</span>
-                <!--span>{{ d['Email'] }}</span-->
-                <span>{{ d['Note'] }}</span>
-                <span><a href="{{ d['Link'] }}">Link</a></span>
-            {% endfor %}
-        </div>
+        <table>
+            <tr class="grid">
+                <th class="header CreatedAt">Skapad
+                    <select id="monthSelect" onchange="onMonthChanged()">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                    </select>
+                </th>
+                <th class="header User"><a onClick='gotoUser(null)' href="#">Användare</a></th>
+                <th class="header Name">Kandidat</th>
+                <th class="header Email">Email</th>
+                <th class="header Note">Anteckning</th>
+                <th class="header Link">TeamTailor</th>
+                <th class="header LinkedIn">LinkedIn</th>
+            </tr>
+                {% for d in data %}
+                <tr>
+                    <td class="CreatedAt">{{ d['CreatedAt'] }}</td>
+                    <td class="User"><a onclick='gotoUser("{{ d["User"] }}")' href="#">{{ d['User'] }}</a></td>
+                    <td class="Name">{{ d['Name'] }}</td>
+                    <td>{{ d['Email'] }}</td>
+                    <td class="Note">{{ d['Note'] }}</td>
+                    <td class="Link"><a href="{{ d['Link'] }}">Profil</a></td>
+                    <td class="LinkedIn"><a href="{{ d['LinkedIn'] }}">LinkedIn</a></td>
+                </tr>
+                {% endfor %}
+        </table>
     </body>
     <script>
         // Load the selected months

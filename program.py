@@ -11,13 +11,13 @@ from dateutil.relativedelta import relativedelta
 
 # Pre-flight checks
 if not os.environ.get("USER"):
-    print("Missing USER env var")
+    print("Missing USER env var for BasicAuth username.")
     exit()
 if not os.environ.get("PASSWORD"):
-    print("Missing PASSWORD env var")
+    print("Missing PASSWORD env var BasicAuth usernames password.")
     exit()
 if not os.environ.get("API_TOKEN"):
-    print("Missing API_TOKEN env var")
+    print("Missing API_TOKEN env var, this is found in TeamTailor.")
     exit()
 
 app = Flask(__name__)
@@ -63,9 +63,11 @@ def get_data():
             'Name': f'{c[2].strip()} {c[3].strip()}',
             'Email': "" if not c[4] else c[4],
             'Note': c[5],
-            'User': c[6]
+            'User': c[6],
+            'LinkedIn': "" if not c[7] else c[7]
+
         } for c in cursor.execute(
-            "SELECT c.Id, DATE(n.CreatedAt), c.FirstName, c.LastName, c.Email , n.Note, u.Name "
+            "SELECT c.Id, DATE(n.CreatedAt), c.FirstName, c.LastName, c.Email, n.Note, u.Name, c.LinkedIn "
             "FROM Candidates AS c "
             "JOIN Notes as n ON n.CandidateId = c.Id "
             "JOIN Users as u ON n.UserId = u.Id "
@@ -170,9 +172,11 @@ def reload_data():
             c['attributes']['first-name'],
             c['attributes']['last-name'],
             c['attributes']['email'],
+            c['attributes']['linkedin-url'],
+            
         ) for c in candidates_json['data']]
         cursor.executemany(
-            "INSERT INTO Candidates (Id, FirstName, LastName, Email) VALUES (?, ?, ?, ?)", 
+            "INSERT INTO Candidates (Id, FirstName, LastName, Email, LinkedIn) VALUES (?, ?, ?, ?, ?)", 
             data
         )
         connection.commit()
@@ -205,7 +209,8 @@ def create_tables(cursor):
             Id INTEGER,
             FirstName VARCHAR(100),
             LastName VARCHAR(100),
-            Email VARCHAR(100)
+            Email VARCHAR(100),
+            LinkedIn VARCHAR(100)
         )
     """) 
     cursor.execute("""
