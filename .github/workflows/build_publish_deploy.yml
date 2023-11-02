@@ -52,17 +52,11 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy teamtailor-insights
-        uses: azure/aci-deploy@v1
-        with:
-          resource-group: ${{ secrets.RESOURCE_GROUP }}
-          dns-name-label: teamtailor-insights
-          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/teamtailor-insights:${{ steps.get_version.outputs.VERSION }}
-          registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-          registry-username: ${{ secrets.REGISTRY_USERNAME }}
-          registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-          name: teamtailor-insights-agent
-          location: 'sweden central'
+      - name: Restart teamtailor-insights-agent
+        run: |
+          az container restart \
+          --resource-group ${{ secrets.RESOURCE_GROUP }} \
+          --name teamtailor-insights-agent
 
       - name: Azure logout
         run: |
