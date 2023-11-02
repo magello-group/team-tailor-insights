@@ -68,10 +68,23 @@
                     <td class="CreatedAt">{{ d['CreatedAt'] }}</td>
                     <td class="User"><a onclick='gotoUser("{{ d["User"] }}")' href="#">{{ d['User'] }}</a></td>
                     <td class="Name">{{ d['Name'] }}</td>
-                    <td>{{ d['Email'] }}</td>
+                    <td class="Email">
+                        {% if d['Email'] %}
+                            <a href="maioto:{{ d['Email'] }}">{{ d['Email'] }}</a>
+                        {% else %}
+                            <span class="empty"></span>                            
+                        {% endif %}
+                    </td>
                     <td class="Note">{{ d['Note'] }}</td>
                     <td class="Link"><a href="{{ d['Link'] }}">Profil</a></td>
-                    <td class="LinkedIn"><a href="{{ d['LinkedIn'] }}">LinkedIn</a></td>
+                    <td class="LinkedIn">
+                        {% if d['LinkedIn'] %}
+                            <a href="{{ d['LinkedIn'] }}">LinkedIn</a>
+                        {% else %}
+                            <span class="empty"></span>                            
+                        {% endif %}
+                    </td>
+
                 </tr>
                 {% endfor %}
         </table>
