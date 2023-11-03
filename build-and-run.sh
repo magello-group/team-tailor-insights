@@ -3,15 +3,15 @@ echo "\n🐳 Build Docker image team-tailor-insights\n"
 docker build -t team-tailor-insights .
 
 if [ -z "${API_TOKEN}" ]; then
-    read -p "👉 API för lösning i TeamTailor: " API_TOKEN
+    read -p "👉 API token med läs-rättigheter i TeamTailor: " API_TOKEN
 fi
 
 if [ -z "${WEB_USER}" ]; then
-    read -p "👉 Användarnamn för webbinloggning: " WEB_USER
+    read -p "👉 Användarnamn BasicAuth-webbinloggning: " WEB_USER
 fi
 
 if [ -z "${WEB_PASSWORD}" ]; then
-    read -p "👉 Lösenord för webbinloggning: " WEB_PASSWORD
+    read -p "👉 Lösenord BasicAuth-webbinloggning: " WEB_PASSWORD
 fi
 
 if [ -z "${PORT}" ]; then
