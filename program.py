@@ -22,6 +22,7 @@ if not os.environ.get("API_TOKEN"):
 
 app = Flask(__name__)
 
+
 # Set up basic auth
 auth = HTTPBasicAuth()
 users = {
@@ -83,9 +84,7 @@ def get_data():
 
     return data
 
-@app.route("/reload", methods=["GET"])
-@auth.login_required
-def reload_data():
+def load_data():
     # Set API headers
     headers = {
         'Authorization': f"Token token={os.environ.get('API_TOKEN')}",
@@ -189,6 +188,11 @@ def reload_data():
 
     connection.close()
 
+
+@app.route("/reload", methods=["GET"])
+@auth.login_required
+def reload_data():
+    load_data()
     return "OK", 200
 
 def request_hook(r, *args, **kwargs):
@@ -219,3 +223,6 @@ def create_tables(cursor):
             Name VARCHAR(100)
         )
     """) 
+
+
+load_data()
